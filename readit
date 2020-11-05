@@ -1,0 +1,4 @@
+#runs gmailcal program which is supposed to read emails, see which ones are reminders and push them to event channel
+#!/bin/bash
+
+python3 gmailcalv1.py
