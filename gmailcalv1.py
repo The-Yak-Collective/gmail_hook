@@ -88,8 +88,8 @@ def main():
                 content = msg['payload']['parts'][0]['body']['data']
                 msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
                 print("message body in plain text? ",msg_body)
-                if msg_body.startswith('Notification'):
-                    reminders.append(msg_body)
+                if heads['Subject'].startswith('Notification'):
+                    reminders.append(heads['Subject']+":::"+msg_body)
 
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
