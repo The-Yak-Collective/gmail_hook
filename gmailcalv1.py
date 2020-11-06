@@ -50,6 +50,13 @@ async def on_ready():
         headers = {'content-type': 'application/json'}
         r = requests.post(url, data=payload)#, headers=headers)
         print(r,r.text)#,r.json())
+        newwhen=x[0][x[0].find('@')+1:]
+        rngs=newwhen.find('-')
+        rnge=newwhen.find('(',rngs)
+        newwhen=newwhen[:rngs-1]+newwhen[rnge:rnge+5]
+        print('extracted time:',newwhen)
+        t=datetime.strptime(newwhen,'%a %b %d, %Y %-I%p (%z)')
+        print('read time:',t)
     
     
 def main():
