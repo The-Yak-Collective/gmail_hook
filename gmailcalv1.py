@@ -34,7 +34,7 @@ async def on_ready():
     #here is example of posting to test server
     url = os.getenv('TEST_HOOK')
     for x in reminders:
-        y="Heads up! @here "+x[0]+'\n\n'+x[1]
+        y="Heads up! @here "+x[0]+'\n\n'#+x[1]
         ttlpos=x[1].find('\nTitle:')
         nlat=x[1].find('\n',ttlpos+1)
         ttl=x[1][ttlpos+7:nlat]
