@@ -1,6 +1,7 @@
 
 import pickle
 import os.path
+import os
 import email
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -8,10 +9,25 @@ from google.auth.transport.requests import Request
 from email.utils import parsedate
 from datetime import datetime
 import time
+import discord
+from dotenv import load_dotenv
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
+client = discord.Client()
+
+load_dotenv('.env')
+reminders=[]
+
+@client.event
+async def on_ready(): 
+
+    print('We have logged in as {0.user}'.format(client),  client.guilds)
+    print('going to send:',[x for x in reminders], 'to:',704047116086935602)
+    channel = client.get_channel(704047116086935602)#calendar events channel
+    #await channel.send('test message')
+    
 def main():
     """Shows basic usage of the Gmail API.
     Lists the user's Gmail labels.
@@ -35,7 +51,6 @@ def main():
             pickle.dump(creds, token)
 
     service = build('gmail', 'v1', credentials=creds)
-
     # Call the Gmail API
     results = service.users().labels().list(userId='me').execute()
     labels = results.get('labels', [])
@@ -43,19 +58,23 @@ def main():
     if not labels:
         print('No labels found.')
     else:
-        print('Labels:')
-        for label in labels:
-            print(label['name'])
+        print('labels found but lets save space')
             
     results= service.users().messages().list(userId="me", maxResults=5, labelIds=['INBOX']).execute()
     messages = results.get('messages', [])
     # print(messageheader)
     for message in messages:
             msg = service.users().messages().get(userId='me', id=message['id']).execute()
-            
-            print(dict([y for y in map(lambda x: (x['name'],x['value']) if (x['name']=='Subject' or x['name']=='From' or x['name']=='Date') else None, msg['payload']['headers']) if y]) ,msg['snippet'])  
+            heads=dict([y for y in map(lambda x: (x['name'],x['value']) if (x['name']=='Subject' or x['name']=='From' or x['name']=='Date') else None, msg['payload']['headers']) if y])
+            heads['Date']=time.mktime(parsedate(heads['Date']))
+            print(heads ,msg['snippet'])
+            print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
+            print('is calendar:',heads['From'].startswith('Google Calendar'))
+            reminders.append(msg['snippet'])
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
-    print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily
+    print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
+    discord_token=os.getenv('CAL_DISCORD_KEY')
+    client.run(discord_token)
 
 if __name__ == '__main__':
     main()
