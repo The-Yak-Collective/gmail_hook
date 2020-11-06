@@ -80,6 +80,8 @@ def main():
             print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
             print('is calendar:',heads['From'].startswith('Google Calendar'))
             reminders.append(msg['snippet'])
+            print('msg:',msg['payload'])
+            print('message:',message)
             content = msg['payload']['parts'][0]['parts'][1]['body']['data']
             # Encode
             msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
