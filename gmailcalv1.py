@@ -53,7 +53,7 @@ def main():
     for message in messages:
             msg = service.users().messages().get(userId='me', id=message['id']).execute()
             
-            print(dict(map(lambda x: (x['name'],x['value']) if (x['name']=='Subject' or x['name']=='From' or x['name']=='Date') else None, msg['payload']['headers'])) ,msg['snippet'])  
+            print(dict([y in map(lambda x: (x['name'],x['value']) if (x['name']=='Subject' or x['name']=='From' or x['name']=='Date') else None, msg['payload']['headers']) if y]) ,msg['snippet'])  
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily
 
