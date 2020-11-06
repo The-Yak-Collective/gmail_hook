@@ -33,10 +33,11 @@ async def on_ready():
     #better - do not connect to discord at all. just use ADY_WEBHOOK using https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks and https://discord.com/developers/docs/resources/webhook
     #here is example of posting to test server
     url = os.getenv('TEST_HOOK')
-    payload = {'content':'tst'}
-    headers = {'content-type': 'application/json'}
-    r = requests.post(url, data=payload)#, headers=headers)
-    print(r,r.text)#,r.json())
+    for x in reminders:
+        payload = {'content': x}
+        headers = {'content-type': 'application/json'}
+        r = requests.post(url, data=payload)#, headers=headers)
+        print(r,r.text)#,r.json())
     
     
 def main():
