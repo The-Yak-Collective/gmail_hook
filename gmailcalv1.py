@@ -1,5 +1,6 @@
 
 import pickle
+import requests
 import os.path
 import os
 import email
@@ -11,6 +12,7 @@ from datetime import datetime
 import time
 import discord
 from dotenv import load_dotenv
+import json
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
@@ -27,6 +29,13 @@ async def on_ready():
     print('going to send:',[x for x in reminders], 'to:',704047116086935602)
     channel = client.get_channel(704047116086935602)#calendar events channel
     #await channel.send('test message')
+    #better - do not connect to discord at all. just use ADY_WEBHOOK using https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks and https://discord.com/developers/docs/resources/webhook
+    #here is example of posting to test server
+    url = os.getenv('TEST_HOOK')
+    payload = {'content':json.dumps(reminders)}
+    headers = {'content-type': 'application/json'}
+    r = requests.post(url, data=payload, headers=headers)
+    
     
 def main():
     """Shows basic usage of the Gmail API.
@@ -71,6 +80,10 @@ def main():
             print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
             print('is calendar:',heads['From'].startswith('Google Calendar'))
             reminders.append(msg['snippet'])
+            content = message['payload']['parts'][0]['parts'][1]['body']['data']
+            # Encode
+            msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
+            print("message body in plain text?",msg_body)
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
     discord_token=os.getenv('CAL_DISCORD_KEY')
