@@ -34,7 +34,19 @@ async def on_ready():
     #here is example of posting to test server
     url = os.getenv('TEST_HOOK')
     for x in reminders:
-        payload = {'content': x}
+        y="Heads up! @here "+x[0]+'\n\n'+x[1]
+        ttlpos=x[1].find('\nTitle:')
+        nlat=x[1].find('\n',ttlpos)
+        ttl=x[1][ttlpos+7:nlat]
+        y=y+"\ntitle is maybe:"+ttl
+        whenpos=x[1].find('\nWhen:')
+        nlaw=x[1].find('\n',whenpos)
+        whn=x[1][whenpos+6:nlaw]
+        y=y+"\nwhen is maybe:"+whn
+        dtl=x[1][nlat+1:whenpos-1]
+        y=y+"\ndetails are maybe:"+dtl
+        
+        payload = {'content': y}
         headers = {'content-type': 'application/json'}
         r = requests.post(url, data=payload)#, headers=headers)
         print(r,r.text)#,r.json())
@@ -89,7 +101,7 @@ def main():
                 msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
                 print("message body in plain text? ",msg_body)
                 if heads['Subject'].startswith('Notification'):
-                    reminders.append(heads['Subject']+":::"+msg_body)
+                    reminders.append((heads['Subject'],msg_body))
 
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
