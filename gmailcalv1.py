@@ -54,9 +54,9 @@ async def on_ready():
         rngs=newwhen.find('-')
         rnge=newwhen.find('(',rngs)
         newwhen=newwhen[:rngs-1]+' '+newwhen[rnge:rnge+5]
-        print('extracted time:',newwhen)
-        t=datetime.strptime(newwhen,'%a %b %d, %Y %I%p (%z)')
-        print('read time:',t)
+        print('extracted time:',newwhen, 'need to convert 3 letter code to real offset; note it depend son machine locals AND pacific time has DST')
+        #t=datetime.strptime(newwhen,'%a %b %d, %Y %I%p %z')
+        #print('read time:',t)
     
     
 def main():
