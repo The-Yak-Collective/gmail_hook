@@ -83,12 +83,14 @@ def main():
             print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
             iscal=heads['From'].startswith('Google Calendar')
             print('is calendar:',iscal)
-            reminders.append(msg['snippet'])
             #print('msg:',msg['payload'])
             if iscal: #gmail/gcal notifications have a format we can guess.
                 content = msg['payload']['parts'][0]['body']['data']
                 msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
-            print("message body in plain text? ",msg_body)
+                print("message body in plain text? ",msg_body)
+                if msg_body.startswith('Notification'):
+                    reminders.append(msg_body)
+
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
     discord_token=os.getenv('CAL_DISCORD_KEY')
