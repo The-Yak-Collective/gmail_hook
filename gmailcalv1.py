@@ -36,7 +36,7 @@ async def on_ready():
     payload = {'content':'tst'}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=payload)#, headers=headers)
-    print(r,r.text,r.json())
+    print(r,r.text)#,r.json())
     
     
 def main():
