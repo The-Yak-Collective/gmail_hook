@@ -53,9 +53,9 @@ async def on_ready():
         newwhen=x[0][x[0].find('@')+1:]
         rngs=newwhen.find('-')
         rnge=newwhen.find('(',rngs)
-        newwhen=newwhen[:rngs-1]+newwhen[rnge:rnge+5]
+        newwhen=newwhen[:rngs-1]+' '+newwhen[rnge:rnge+5]
         print('extracted time:',newwhen)
-        t=datetime.strptime(newwhen,'%a %b %d, %Y %-I%p (%z)')
+        t=datetime.strptime(newwhen,'%a %b %d, %Y %I%p (%z)')
         print('read time:',t)
     
     
