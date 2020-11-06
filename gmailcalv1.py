@@ -36,11 +36,11 @@ async def on_ready():
     for x in reminders:
         y="Heads up! @here "+x[0]+'\n\n'+x[1]
         ttlpos=x[1].find('\nTitle:')
-        nlat=x[1].find('\n',ttlpos)
+        nlat=x[1].find('\n',ttlpos+1)
         ttl=x[1][ttlpos+7:nlat]
         y=y+"\ntitle is maybe:"+ttl
         whenpos=x[1].find('\nWhen:')
-        nlaw=x[1].find('\n',whenpos)
+        nlaw=x[1].find('\n',whenpos+1)
         whn=x[1][whenpos+6:nlaw]
         y=y+"\nwhen is maybe:"+whn
         dtl=x[1][nlat+1:whenpos-1]
