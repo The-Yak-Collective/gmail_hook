@@ -35,7 +35,7 @@ async def on_ready():
     url = os.getenv('TEST_HOOK')
     payload = {'content':'tst'}
     headers = {'content-type': 'application/json'}
-    r = requests.post(url, data=payload, headers=headers)
+    r = requests.post(url, data=payload)#, headers=headers)
     print(r,r.text,r.json())
     
     
