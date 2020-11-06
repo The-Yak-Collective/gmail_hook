@@ -81,8 +81,7 @@ def main():
             print('is calendar:',heads['From'].startswith('Google Calendar'))
             reminders.append(msg['snippet'])
             print('msg:',msg['payload'])
-            print('message:',message)
-            content = msg['payload']['parts'][0]['parts'][1]['body']['data']
+            content = msg['payload']['parts'][0]['body']['data']
             # Encode
             msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
             print("message body in plain text?",msg_body)
