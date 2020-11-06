@@ -1,4 +1,5 @@
 
+import base64
 import pickle
 import requests
 import os.path
@@ -80,11 +81,11 @@ def main():
             print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
             print('is calendar:',heads['From'].startswith('Google Calendar'))
             reminders.append(msg['snippet'])
-            print('msg:',msg['payload'])
+            #print('msg:',msg['payload'])
             content = msg['payload']['parts'][0]['body']['data']
             # Encode
             msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
-            print("message body in plain text?",msg_body)
+            print("message body in plain text? ",msg_body)
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
     discord_token=os.getenv('CAL_DISCORD_KEY')
