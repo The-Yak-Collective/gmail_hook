@@ -27,12 +27,16 @@ def main():
     for z in es:
         print('event is',z.summary)
         tl=z.time_left()
-        ts=''
-        y="Heads up! @here "+z.summary+'  '+str(z.start)+'\n\n'
+
+
         days, hours, minutes, sl = tl.days, tl.seconds // 3600, tl.seconds // 60 % 60, tl.days*3600*24+tl.seconds
+
         for rm in remindseconds:
-            if True: #rm<croncycle and sl<croncycle:
-                y=y+z.description[:-16]+'\n\n'
+            if rm<croncycle and sl<croncycle:
+                y="Heads up! @here "+z.summary+'  '+str(z.start)+'\n\n'
+                y=y+z.description+'\n\n'
+                ts=''
+
                 if(days>0):
                     ts=str(days) + ' days and '
                 if(hours>0):
@@ -43,7 +47,7 @@ def main():
                     ts=' NOW'
                 y=y+'starts in about: '+ ts
                 payload = {"content": y}
-                atm=1 #(sl-rm) // 60
+                atm=(sl-rm) // 60
                 f=tempfile.NamedTemporaryFile(mode='w+',delete=False)
                 json.dump(payload,f)
                 f.flush()
