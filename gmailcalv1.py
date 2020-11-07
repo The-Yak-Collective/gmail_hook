@@ -82,7 +82,7 @@ def main():
             iscal=heads['From'].startswith('Google Calendar')
             print('is calendar:',iscal)
             #print('msg:',msg['payload'])
-            if iscal:# and isrecent: #gmail/gcal notifications have a format we can guess.
+            if iscal and isrecent: #gmail/gcal notifications have a format we can guess.
                 content = msg['payload']['parts'][0]['body']['data']
                 msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
                 #print("message body in plain text? ",msg_body)
@@ -113,9 +113,10 @@ def main():
         #y=y+"\nwhen is maybe:"+whn
         dtl=x[1][nlat+1:whenpos-1]
         #y=y+"\ndetails are maybe:"+dtl
+        
         for z in es:
             if ttl.strip()==z.summary.strip():
-                y=y+z.description+'\n\n'
+                y=y+z.description[:-16]+'\n\n'
                 tl=z.time_left()
                 ts=''
                 days, hours, minutes = tl.days, tl.seconds // 3600, tl.seconds // 60 % 60
