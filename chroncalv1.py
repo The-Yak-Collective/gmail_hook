@@ -30,7 +30,7 @@ def main():
         y="Heads up! @here "+z.summary+'  '+str(z.start)+'\n\n'
         days, hours, minutes, sl = tl.days, tl.seconds // 3600, tl.seconds // 60 % 60, tl.days*3600*24+tl.seconds
         for rm in remindseconds:
-            if rm<croncycle and sl<croncycle:
+            if True: #rm<croncycle and sl<croncycle:
                 y=y+z.description[:-16]+'\n\n'
                 if(days>0):
                     ts=str(days) + ' days and '
@@ -42,7 +42,7 @@ def main():
                     ts=' NOW'
                 y=y+'starts in about: '+ ts
                 payload = {"content": y}
-                atm=(sl-rm) // 60
+                atm=1 #(sl-rm) // 60
                 os.system('''echo curl -d '{}' -X POST $TEST_HOOK | at now +{} minutes'''.format(str(payload),atm))
 
 if __name__ == '__main__':
