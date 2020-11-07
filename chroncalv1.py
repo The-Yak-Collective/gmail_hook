@@ -45,10 +45,10 @@ def main():
                 payload = {"content": y}
                 atm=1 #(sl-rm) // 60
                 os.system('''at now +{} minutes <<END
-exec >>~/robot/gmail_hook/alogfile
+exec >>~/robot/gmail_hook/alogfile 2>&1
 set -x
 set -v
-curl -d "{}" -X POST $TEST_HOOK 
+curl -d "{}" -H "Content-Type: application/json" -X POST $TEST_HOOK 
 END'''.format(atm,str(payload)))
 
 if __name__ == '__main__':
