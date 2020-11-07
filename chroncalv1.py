@@ -44,8 +44,9 @@ def main():
                 y=y+'starts in about: '+ ts
                 payload = {"content": y}
                 atm=1 #(sl-rm) // 60
-                f=tempfile.NamedTemporaryFile(mode='w')
+                f=tempfile.NamedTemporaryFile(mode='w+')
                 json.dump(payload,f)
+                f.flush()
                 os.system('''at now +{} minutes <<END
 exec >>~/robot/gmail_hook/alogfile 2>&1
 set -x
