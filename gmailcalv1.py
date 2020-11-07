@@ -120,7 +120,7 @@ def main():
         y=y+"\ndetails are maybe:"+dtl
         for z in es:
             if ttl.strip()==z.summary.strip():
-                y=y+'countdown: '+z.time_left()+str(len(ttl))+':'+str(len(z.summary))
+                y=y+'countdown: '+str(z.time_left())+str(len(ttl))+':'+str(len(z.summary))
                 break
             else:
                 print(ttl,z.summary,str(len(ttl))+':'+str(len(z.summary)))
