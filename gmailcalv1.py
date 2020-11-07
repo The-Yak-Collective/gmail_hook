@@ -120,9 +120,14 @@ def main():
                 ts=''
                 days, hours, minutes = tl.days, tl.seconds // 3600, tl.seconds // 60 % 60
                 if(days>0):
-                    ts=str(tl.days) + ' days and'
-                ts=ts+ str(hours)+ ' hours' +' and '+str(minutes)+ ' minutes'
-                y=y+'startsin about: '+ ts
+                    ts=str(days) + ' days and '
+                if(hours>0):
+                    ts=str(hours) + ' hours and'
+                if(minutes>0):
+                    ts=str(minutes) + ' minutes.'
+                if(days==0 and hours==0 and minutes<=0)
+                    ts=' NOW'
+                y=y+'starts in about: '+ ts
                 break
         payload = {'content': y}
         headers = {'content-type': 'application/json'}
