@@ -1,5 +1,6 @@
 
 import icalendar as ical
+from icalevents.icalevents import events
 import base64
 import pickle
 import requests
@@ -96,6 +97,9 @@ def main():
     icalurl='https://calendar.google.com/calendar/ical/o995m43173bpslmhh49nmrp5i4%40group.calendar.google.com/public/basic.ics'
     icalfile=requests.get(icalurl)
     print('got ical',icalfile,icalfile.text)
+    es=events(icalurl)
+    print('just the events:',es)
+    
     for x in reminders:
         y="Heads up! @here "+x[0]+'\n\n'#+x[1]
         ttlpos=x[1].find('\nTitle:')
