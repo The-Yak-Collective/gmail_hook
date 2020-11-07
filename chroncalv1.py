@@ -48,7 +48,9 @@ def main():
 exec >>~/robot/gmail_hook/alogfile 2>&1
 set -x
 set -v
-curl -d "{}" -H "Content-Type: application/json" -X POST $TEST_HOOK 
+file=$(mktemp)
+echo {} >$file
+curl -d "@$file" -H "Content-Type: application/json" -X POST $TEST_HOOK 
 END'''.format(atm,str(payload)))
 
 if __name__ == '__main__':
