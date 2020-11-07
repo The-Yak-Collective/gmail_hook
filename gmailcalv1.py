@@ -125,7 +125,7 @@ def main():
                     ts=str(hours) + ' hours and'
                 if(minutes>0):
                     ts=str(minutes) + ' minutes.'
-                if(days==0 and hours==0 and minutes<=0)
+                if(days==0 and hours==0 and minutes<=0):
                     ts=' NOW'
                 y=y+'starts in about: '+ ts
                 break
