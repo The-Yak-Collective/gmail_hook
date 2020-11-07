@@ -44,7 +44,7 @@ def main():
                 payload = {"content": y}
                 atm=1 #(sl-rm) // 60
                 os.system('''at now +{} minutes <<END
-curl -d '{}' -X POST $TEST_HOOK
+curl -d '{}' -X POST $TEST_HOOK >>~/robot/gmail_hook/alogfile
 END'''.format(atm,str(payload)))
 
 if __name__ == '__main__':
