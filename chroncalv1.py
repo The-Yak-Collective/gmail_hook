@@ -44,7 +44,7 @@ def main():
                 y=y+'starts in about: '+ ts
                 payload = {"content": y}
                 atm=1 #(sl-rm) // 60
-                f=tempfile.NamedTemporaryFile(mode='w+')
+                f=tempfile.NamedTemporaryFile(mode='w+',delete=False)
                 json.dump(payload,f)
                 f.flush()
                 os.system('''at now +{} minutes <<END
@@ -52,7 +52,8 @@ exec >>~/robot/gmail_hook/alogfile 2>&1
 set -x
 set -v
 curl -d "@{}" -H "Content-Type: application/json" -X POST $TEST_HOOK 
-END'''.format(atm,f.name))
+rm {}
+END'''.format(atm,f.name,f.name))
 
 if __name__ == '__main__':
     main()
