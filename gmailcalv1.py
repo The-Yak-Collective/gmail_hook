@@ -23,7 +23,7 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 client = discord.Client()
 
 load_dotenv('.env')
-reminders=[]
+
 
 @client.event
 async def on_ready(): 
@@ -32,7 +32,6 @@ async def on_ready():
     channel = client.get_channel(704047116086935602)#calendar events channel
     #await channel.send('test message')
     #better - do not connect to discord at all. just use ADY_WEBHOOK using https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks and https://discord.com/developers/docs/resources/webhook
-    #here is example of posting to test server
 
     
     
@@ -71,68 +70,69 @@ def main():
     results= service.users().messages().list(userId="me", maxResults=5, labelIds=['INBOX']).execute()
     messages = results.get('messages', [])
     # print(messageheader)
+    reminders={}
     for message in messages:
             msg = service.users().messages().get(userId='me', id=message['id']).execute()
             heads=dict([y for y in map(lambda x: (x['name'],x['value']) if (x['name']=='Subject' or x['name']=='From' or x['name']=='Date') else None, msg['payload']['headers']) if y])
-            print('here is the date on teh gmail - mayeb it tells us correct timezzone?',heads['Date'])
+            #print('here is the date on teh gmail - mayeb it tells us correct timezzone?',heads['Date'])
             heads['Date']=time.mktime(parsedate(heads['Date']))
-            print(heads ,msg['snippet'])
-            print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
+            #print(heads ,msg['snippet'])
+            #print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
+            isrecent=heads['Date']>int(time.time()-100)
             iscal=heads['From'].startswith('Google Calendar')
             print('is calendar:',iscal)
             #print('msg:',msg['payload'])
-            if iscal: #gmail/gcal notifications have a format we can guess.
+            if iscal:# and isrecent: #gmail/gcal notifications have a format we can guess.
                 content = msg['payload']['parts'][0]['body']['data']
                 msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
-                print("message body in plain text? ",msg_body)
+                #print("message body in plain text? ",msg_body)
                 if heads['Subject'].startswith('Notification'):
-                    reminders.append((heads['Subject'],msg_body))
+                    sum=heads['Subject'][13:heads['Subject'].find('@')].strip()
+                    reminders[sum]=(heads['Subject'],msg_body))
 
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
 #    discord_token=os.getenv('CAL_DISCORD_KEY')
 #    client.run(discord_token)
-    print('going to send:',[x for x in reminders], 'to:',704047116086935602)
+    #print('going to send:',[x for x in reminders], 'to:',704047116086935602)
     url = os.getenv('TEST_HOOK')
     icalurl='https://calendar.google.com/calendar/ical/o995m43173bpslmhh49nmrp5i4%40group.calendar.google.com/public/basic.ics'
-    icalfile=requests.get(icalurl)
-    #print('got ical',icalfile,icalfile.text)
+    #icalfile=requests.get(icalurl) #for now we just focus on events
     es=events(icalurl)
-    #print('just the events:',es)
-    for y in es:
-        tl=y.time_left()
-        days, hours, minutes = tl.days, tl.seconds // 3600, tl.seconds // 60 % 60
-        ts=str(tl.days) + ' days '
-        ts=ts+ ' and '+ str(hours)+ ' hours' +' and '+str(minutes)+ ' minutes'
-        print('time left for:', y.summary, ts)
-        
-    for x in reminders:
+
+    for r in reminders:
+        x=reminders[r]
         y="Heads up! @here "+x[0]+'\n\n'#+x[1]
         ttlpos=x[1].find('\nTitle:')
         nlat=x[1].find('\n',ttlpos+1)
         ttl=x[1][ttlpos+7:nlat]
-        y=y+"\ntitle is maybe:"+ttl
+        #y=y+"\ntitle is maybe:"+ttl
         whenpos=x[1].find('\nWhen:')
         nlaw=x[1].find('\n',whenpos+1)
         whn=x[1][whenpos+6:nlaw]
-        y=y+"\nwhen is maybe:"+whn
+        #y=y+"\nwhen is maybe:"+whn
         dtl=x[1][nlat+1:whenpos-1]
-        y=y+"\ndetails are maybe:"+dtl
+        #y=y+"\ndetails are maybe:"+dtl
         for z in es:
             if ttl.strip()==z.summary.strip():
-                y=y+'countdown: '+str(z.time_left())+str(len(ttl))+':'+str(len(z.summary))
+                y=y+z.description+'\n\n'
+                tl=z.time_left()
+                ts=''
+                days, hours, minutes = tl.days, tl.seconds // 3600, tl.seconds // 60 % 60
+                if(days>0):
+                    ts=str(tl.days) + ' days and'
+                ts=ts+ str(hours)+ ' hours' +' and '+str(minutes)+ ' minutes'
+                y=y+'startsin about: '+ ts
                 break
-            else:
-                print(ttl,z.summary,str(len(ttl))+':'+str(len(z.summary)))
         payload = {'content': y}
         headers = {'content-type': 'application/json'}
-        r = requests.post(url, data=payload)#, headers=headers)
-        print(r,r.text)#,r.json())
-        newwhen=x[0][x[0].find('@')+1:]
-        rngs=newwhen.find('-')
-        rnge=newwhen.find('(',rngs)
-        newwhen=newwhen[:rngs-1]+' '+newwhen[rnge:rnge+5]
-        print('extracted time:',newwhen, 'need to convert 3 letter code to real offset; note it depend son machine locals AND pacific time has DST')
+        req = requests.post(url, data=payload)#, headers=headers)
+        print(req,req.text)#,r.json())
+        #newwhen=x[0][x[0].find('@')+1:]
+        #rngs=newwhen.find('-')
+        #rnge=newwhen.find('(',rngs)
+        #newwhen=newwhen[:rngs-1]+' '+newwhen[rnge:rnge+5]
+        #print('extracted time:',newwhen, 'need to convert 3 letter code to real offset; note it depend son machine locals AND pacific time has DST')
         #t=datetime.strptime(newwhen,'%a %b %d, %Y %I%p %z')
         #print('read time:',t)
 
