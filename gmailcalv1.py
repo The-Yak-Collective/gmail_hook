@@ -122,6 +122,8 @@ def main():
             if ttl.startswith(z.summary):
                 y=y+'countdown: '+z.time_left()+len(ttl)+':'+len(z.summary)
                 break
+            else:
+                print(ttl,z.summary,len(ttl)+':'+len(z.summary))
         payload = {'content': y}
         headers = {'content-type': 'application/json'}
         r = requests.post(url, data=payload)#, headers=headers)
