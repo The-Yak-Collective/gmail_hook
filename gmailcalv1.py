@@ -123,7 +123,7 @@ def main():
                 y=y+'countdown: '+z.time_left()+len(ttl)+':'+len(z.summary)
                 break
             else:
-                print(ttl,z.summary,len(ttl)+':'+len(z.summary))
+                print(ttl,z.summary,str(len(ttl))+':'+str(len(z.summary)))
         payload = {'content': y}
         headers = {'content-type': 'application/json'}
         r = requests.post(url, data=payload)#, headers=headers)
