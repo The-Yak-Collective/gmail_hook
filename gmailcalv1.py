@@ -102,7 +102,7 @@ def main():
 
     for r in reminders:
         x=reminders[r]
-        y="Heads up! @here "+x[0]+'\n\n'#+x[1]
+        y="Heads up! @here "+x[0][13:]+'\n\n'#+x[1]
         ttlpos=x[1].find('\nTitle:')
         nlat=x[1].find('\n',ttlpos+1)
         ttl=x[1][ttlpos+7:nlat]
