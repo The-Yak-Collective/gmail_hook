@@ -88,7 +88,7 @@ def main():
                 #print("message body in plain text? ",msg_body)
                 if heads['Subject'].startswith('Notification'):
                     sum=heads['Subject'][13:heads['Subject'].find('@')].strip()
-                    reminders[sum]=(heads['Subject'],msg_body))
+                    reminders[sum]=(heads['Subject'],msg_body)
 
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
