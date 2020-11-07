@@ -25,6 +25,7 @@ def main():
 
         
     for z in es:
+        print('event is',z.summary)
         tl=z.time_left()
         ts=''
         y="Heads up! @here "+z.summary+'  '+str(z.start)+'\n\n'
@@ -44,7 +45,7 @@ def main():
                 payload = {"content": y}
                 atm=1 #(sl-rm) // 60
                 os.system('''at now +{} minutes <<END
-curl -d '{}' -X POST $TEST_HOOK >>~/robot/gmail_hook/alogfile
+echo curl -d '{}' -X POST $TEST_HOOK >>~/robot/gmail_hook/alogfile
 END'''.format(atm,str(payload)))
 
 if __name__ == '__main__':
