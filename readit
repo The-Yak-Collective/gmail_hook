@@ -2,4 +2,4 @@
 #amended so it executes in correct place
 #!/bin/bash
 cd ~/robot/gmail_hook 
-python3 gmailcalv1.py >localgmaillog
+python3 gmailcalv1.py >>localgmaillog
