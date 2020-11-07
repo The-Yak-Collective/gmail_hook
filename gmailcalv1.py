@@ -101,12 +101,11 @@ def main():
     #print('just the events:',es)
     for y in es:
         tl=y.time_left()
-        days=tl.days
-        hours=tl.seconds//3600
-        minutes=(tl.seconds-hours*3600)//60
-        ts=str(tl.days) + ' days'
-        ts=ts+ 'and '+ str(hours)+ ' hours' +' and '+str(minutes)+ ' minutes'
+        days, hours, minutes = tl.days, tl.seconds // 3600, tl.seconds // 60 % 60
+        ts=str(tl.days) + ' days '
+        ts=ts+ ' and '+ str(hours)+ ' hours' +' and '+str(minutes)+ ' minutes'
         print('time left for:', y.summary, ts)
+        
     for x in reminders:
         y="Heads up! @here "+x[0]+'\n\n'#+x[1]
         ttlpos=x[1].find('\nTitle:')
@@ -119,7 +118,10 @@ def main():
         y=y+"\nwhen is maybe:"+whn
         dtl=x[1][nlat+1:whenpos-1]
         y=y+"\ndetails are maybe:"+dtl
-        
+        for z in es:
+            if ttl.startswith(z.summary):
+                y=y+'countdown: '+z.time_left()+len(ttl)+':'+len(z.summary)
+                break
         payload = {'content': y}
         headers = {'content-type': 'application/json'}
         r = requests.post(url, data=payload)#, headers=headers)
