@@ -43,7 +43,9 @@ def main():
                 y=y+'starts in about: '+ ts
                 payload = {"content": y}
                 atm=1 #(sl-rm) // 60
-                os.system('''echo curl -d '{}' -X POST $TEST_HOOK | at now +{} minutes'''.format(str(payload),atm))
+                os.system('''at now +{} minutes <<END
+curl -d '{}' -X POST $TEST_HOOK
+END'''.format(atm,str(payload)))
 
 if __name__ == '__main__':
     main()
