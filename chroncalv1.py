@@ -38,11 +38,11 @@ def main():
                 ts=''
 
                 if(days>0):
-                    ts=str(days) + ' days and '
+                    ts=ts+str(days) + ' days and '
                 if(hours>0):
-                    ts=str(hours) + ' hours and'
+                    ts=ts+str(hours) + ' hours and'
                 if(minutes>0):
-                    ts=str(minutes) + ' minutes.'
+                    ts=ts+str(minutes) + ' minutes.'
                 if(days==0 and hours==0 and minutes<=0):
                     ts=' NOW'
                 y=y+'starts in about: '+ ts
