@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 import json
 
 remindseconds=[900,7200]
-croncycle=7100 #maybe will need to change this number
+croncycle=10800 #maybe will need to change this number
 
 load_dotenv('.env')
 
@@ -32,7 +32,8 @@ def main():
         days, hours, minutes, sl = tl.days, tl.seconds // 3600, tl.seconds // 60 % 60, tl.days*3600*24+tl.seconds
 
         for rm in remindseconds:
-            if rm<croncycle and sl<croncycle:
+            ttr=sl-rm
+            if ttr//croncycle==1:
                 y="Heads up! @here "+z.summary+'  '+str(z.start)+'\n\n'
                 y=y+z.description+'\n\n'
                 ts=''
