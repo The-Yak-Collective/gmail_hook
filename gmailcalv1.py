@@ -22,7 +22,7 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 client = discord.Client()
 
-load_dotenv('.env')
+load_dotenv('~/.env')
 
 
 @client.event
