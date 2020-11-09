@@ -24,7 +24,7 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 client = discord.Client()
 
-load_dotenv('~/.env')
+load_dotenv('/home/yak/.env')
 
 
 @client.event
@@ -75,7 +75,7 @@ def main():
     reminders={}
     dones=[]
     beingdone=[]
-    with open('~/lastmess','r') as f:
+    with open('/home/yak/lastmess','r') as f:
         dones=f.readlines()
     for message in messages:
             beingdone.push(message['id'])
@@ -97,7 +97,7 @@ def main():
                     sum=heads['Subject'][13:heads['Subject'].find('@')].strip()
                     reminders[sum]=(heads['Subject'],msg_body)
                     print('got one:',reminders[sum])
-    with open('~/lastmess','w') as f:
+    with open('/home/yak/lastmess','w') as f:
         f.writelines(beingdone)
 
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
