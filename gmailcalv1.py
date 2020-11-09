@@ -79,6 +79,7 @@ def main():
         dones=f.readlines()
     for message in messages:
             beingdone.append(message['id'])
+            print(message['id'])
             msg = service.users().messages().get(userId='me', id=message['id']).execute()
             heads=dict([y for y in map(lambda x: (x['name'],x['value']) if (x['name']=='Subject' or x['name']=='From' or x['name']=='Date') else None, msg['payload']['headers']) if y])
             #print('here is the date on teh gmail - mayeb it tells us correct timezzone?',heads['Date'])
@@ -97,6 +98,8 @@ def main():
                     sum=heads['Subject'][13:heads['Subject'].find('@')].strip()
                     reminders[sum]=(heads['Subject'],msg_body)
                     print('got one:',reminders[sum])
+    print('dones:',done)
+    print('beingdone:',beingdone,len(messages))
     with open('/home/yak/lastmess','w') as f:
         f.writelines(beingdone)
 
