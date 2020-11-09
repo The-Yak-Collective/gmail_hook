@@ -78,7 +78,7 @@ def main():
     with open('/home/yak/lastmess','r') as f:
         dones=f.readlines()
     for message in messages:
-            beingdone.push(message['id'])
+            beingdone.append(message['id'])
             msg = service.users().messages().get(userId='me', id=message['id']).execute()
             heads=dict([y for y in map(lambda x: (x['name'],x['value']) if (x['name']=='Subject' or x['name']=='From' or x['name']=='Date') else None, msg['payload']['headers']) if y])
             #print('here is the date on teh gmail - mayeb it tells us correct timezzone?',heads['Date'])
