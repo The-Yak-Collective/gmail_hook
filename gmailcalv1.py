@@ -147,7 +147,7 @@ def main():
         newwhen=x[0][x[0].find('@')+1:]
         rngs=newwhen.find('-')
         rnge=newwhen.find('(',rngs)
-        newwhen=newwhen[:rngs-1]
+        newwhen=newwhen[:rngs-1].strip()
         print('extracted time:',newwhen, )
         t=datetime.strptime(newwhen,'%a %b %d, %Y %I%p')
         print('read time:',t)
