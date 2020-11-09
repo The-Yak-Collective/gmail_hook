@@ -138,12 +138,8 @@ def main():
                     ts=str(minutes) + ' minutes.'
                 if(days==0 and hours==0 and minutes<=0):
                     ts=' NOW'
-                y=y+'starts in about (but see DST bug): '+ ts
+                y=y+'starts in about (but see DST bug): '+ ts+'\n\n'
                 break
-        payload = {'content': y}
-        headers = {'content-type': 'application/json'}
-        req = requests.post(url, data=payload)#, headers=headers)
-        print(req,req.text)#,r.json())
         newwhen=x[0][x[0].find('@')+1:]
         rngs=newwhen.find('-')
         rnge=newwhen.find('(',rngs)
@@ -153,7 +149,23 @@ def main():
         print('read time:',t)
         t1=timezone('US/Pacific').localize(t)
         print('localized time:',t1)
-        print('difference from now:', t1-datetime.now().astimezone())
+        dt=t1-datetime.now().astimezone()
+        dt_t=dt.total_seconds()
+        dth,dtm=dt_t //3600, dt_t // 60 % 60
+        print('difference from now:',dt, dt_t, dth,":",dtm )
+        if(dth>0):
+            ts=str(dth) + 'hours and '
+        if(dtm>0):
+            ts=str(dtm) + ' minutes.'
+        if(dth==0 and dtm<=0):
+            ts=' NOW'
+
+        y=y+'new calculated time; even will start in about '+ts
+        payload = {'content': y}
+        headers = {'content-type': 'application/json'}
+        req = requests.post(url, data=payload)#, headers=headers)
+        print(req,req.text)#,r.json())
+
 
 if __name__ == '__main__':
     main()
