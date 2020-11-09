@@ -98,7 +98,7 @@ def main():
                     sum=heads['Subject'][13:heads['Subject'].find('@')].strip()
                     reminders[sum]=(heads['Subject'],msg_body)
                     print('got one:',reminders[sum])
-    print('dones:',done)
+    print('dones:',dones)
     print('beingdone:',beingdone,len(messages))
     with open('/home/yak/lastmess','w') as f:
         f.writelines(beingdone)
