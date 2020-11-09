@@ -11,7 +11,9 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from email.utils import parsedate
-from datetime import datetime
+from datetime import datetime, timedelta
+from pytz import timezone
+import pytz
 import time
 import discord
 from dotenv import load_dotenv
@@ -71,24 +73,32 @@ def main():
     messages = results.get('messages', [])
     # print(messageheader)
     reminders={}
+    dones=[]
+    beingdone=[]
+    with open('~/lastmess','r') as f:
+        dones=f.readlines()
     for message in messages:
+            beingdone.push(message['id'])
             msg = service.users().messages().get(userId='me', id=message['id']).execute()
             heads=dict([y for y in map(lambda x: (x['name'],x['value']) if (x['name']=='Subject' or x['name']=='From' or x['name']=='Date') else None, msg['payload']['headers']) if y])
             #print('here is the date on teh gmail - mayeb it tells us correct timezzone?',heads['Date'])
             heads['Date']=time.mktime(parsedate(heads['Date']))
             #print(heads ,msg['snippet'])
             #print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
-            isrecent=heads['Date']>int(time.time()-100)
+            isnew=message['id'] not in dones
             iscal=heads['From'].startswith('Google Calendar')
-            print('is calendar:',iscal)
+            print('is calendar:',iscal,'is new:',isnew, message['id'], heads['Date'])
             #print('msg:',msg['payload'])
-            if iscal and isrecent: #gmail/gcal notifications have a format we can guess.
+            if iscal and isnew: #gmail/gcal notifications have a format we can guess.
                 content = msg['payload']['parts'][0]['body']['data']
                 msg_body = base64.urlsafe_b64decode(content).decode('utf-8')
                 #print("message body in plain text? ",msg_body)
                 if heads['Subject'].startswith('Notification'):
                     sum=heads['Subject'][13:heads['Subject'].find('@')].strip()
                     reminders[sum]=(heads['Subject'],msg_body)
+                    print('got one:',reminders[sum])
+    with open('~/lastmess','w') as f:
+        f.writelines(beingdone)
 
     request = {  'labelIds': ['INBOX'],  'topicName': 'projects/yc-cal-reminders-1604260822408/topics/hook' }
     print(service.users().watch(userId='me', body=request).execute())#needs to be renewed daily. or at least weekly. but we get enough reminders to make this happen on its own. we hope
@@ -128,19 +138,22 @@ def main():
                     ts=str(minutes) + ' minutes.'
                 if(days==0 and hours==0 and minutes<=0):
                     ts=' NOW'
-                y=y+'starts in about: '+ ts
+                y=y+'starts in about (but see DST bug): '+ ts
                 break
         payload = {'content': y}
         headers = {'content-type': 'application/json'}
         req = requests.post(url, data=payload)#, headers=headers)
         print(req,req.text)#,r.json())
-        #newwhen=x[0][x[0].find('@')+1:]
-        #rngs=newwhen.find('-')
-        #rnge=newwhen.find('(',rngs)
-        #newwhen=newwhen[:rngs-1]+' '+newwhen[rnge:rnge+5]
-        #print('extracted time:',newwhen, 'need to convert 3 letter code to real offset; note it depend son machine locals AND pacific time has DST')
-        #t=datetime.strptime(newwhen,'%a %b %d, %Y %I%p %z')
-        #print('read time:',t)
+        newwhen=x[0][x[0].find('@')+1:]
+        rngs=newwhen.find('-')
+        rnge=newwhen.find('(',rngs)
+        newwhen=newwhen[:rngs-1]
+        print('extracted time:',newwhen, )
+        t=datetime.strptime(newwhen,'%a %b %d, %Y %I%p')
+        print('read time:',t)
+        t1=timezone('US/Pacific').localize(t)
+        print('localized time:',t1)
+        print('difference from now:', t1-.datetime.now())
 
 if __name__ == '__main__':
     main()
