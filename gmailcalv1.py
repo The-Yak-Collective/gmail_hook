@@ -156,10 +156,14 @@ def main():
         dt_t=dt.total_seconds()
         dth,dtm=dt_t //3600, dt_t // 60 % 60
         print('difference from now:',dt, dt_t, dth,":",dtm )
+        ts=""
         if(dth>0):
-            ts=str(int(dth)) + ' hours and '
+            ts=str(int(dth)) + ' hours'
+            if(dtm>0):
+                ts=ts+' and '
         if(dtm>0):
-            ts=ts+str(int(dtm)) + ' minutes.'
+                ts=ts+str(int(dtm)) + ' minutes.'
+
         if(dth==0 and dtm<=0):
             ts=' NOW'
 
