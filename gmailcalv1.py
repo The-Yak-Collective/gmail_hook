@@ -86,7 +86,7 @@ def main():
             heads['Date']=time.mktime(parsedate(heads['Date']))
             #print(heads ,msg['snippet'])
             #print('arrived in last 100 seconds:',heads['Date']>int(time.time()-100))
-            isnew=message['id'] not in dones
+            isnew=message['id']+'\n' not in dones
             iscal=heads['From'].startswith('Google Calendar')
             print('is calendar:',iscal,'is new:',isnew, message['id'], heads['Date'])
             #print('msg:',msg['payload'])
