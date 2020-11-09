@@ -133,9 +133,9 @@ def main():
                 if(days>0):
                     ts=str(days) + ' days and '
                 if(hours>0):
-                    ts=str(hours) + ' hours and'
+                    ts=ts+str(hours) + ' hours and'
                 if(minutes>0):
-                    ts=str(minutes) + ' minutes.'
+                    ts=ts+str(minutes) + ' minutes.'
                 if(days==0 and hours==0 and minutes<=0):
                     ts=' NOW'
                 y=y+'starts in about (but see DST bug): '+ ts+'\n\n'
@@ -156,7 +156,7 @@ def main():
         if(dth>0):
             ts=str(dth) + 'hours and '
         if(dtm>0):
-            ts=str(dtm) + ' minutes.'
+            ts=ts+str(dtm) + ' minutes.'
         if(dth==0 and dtm<=0):
             ts=' NOW'
 
