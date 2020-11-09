@@ -153,7 +153,7 @@ def main():
         print('read time:',t)
         t1=timezone('US/Pacific').localize(t)
         print('localized time:',t1)
-        print('difference from now:', t1-datetime.now())
+        print('difference from now:', t1-datetime.now().astimezone())
 
 if __name__ == '__main__':
     main()
