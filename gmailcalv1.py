@@ -154,13 +154,13 @@ def main():
         dth,dtm=dt_t //3600, dt_t // 60 % 60
         print('difference from now:',dt, dt_t, dth,":",dtm )
         if(dth>0):
-            ts=str(dth) + 'hours and '
+            ts=str(int(dth)) + ' hours and '
         if(dtm>0):
-            ts=ts+str(dtm) + ' minutes.'
+            ts=ts+str(int(dtm)) + ' minutes.'
         if(dth==0 and dtm<=0):
             ts=' NOW'
 
-        y=y+'new calculated time; even will start in about '+ts
+        y=y+'new calculated time; event will start in about '+ts
         payload = {'content': y}
         headers = {'content-type': 'application/json'}
         req = requests.post(url, data=payload)#, headers=headers)
