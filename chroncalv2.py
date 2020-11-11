@@ -58,18 +58,18 @@ def main():
                                         singleEvents=True,
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
-
+    pp = pprint.PrettyPrinter(indent=1)
+    pp.pprint(events_result)
     if not events:
         print('No upcoming events found.')
-    print(events_result.defaultReminders)
+
     for event in events:
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
         #print(start, datetime.utcnow(),datetime.now().astimezone())
         
         print('starts in:', datetime.utcnow().astimezone()-start, event['summary'], event.reminders)
-    pp = pprint.PrettyPrinter(indent=1)
-    pp.pprint(events_result)
 
+    print(events_result.defaultReminders)
     #req = requests.post(url, data=payload)#, headers=headers)
     #print(req,req.text)#,r.json())
 
