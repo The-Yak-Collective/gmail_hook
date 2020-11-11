@@ -65,7 +65,7 @@ def main():
             reminders=events_result['defaultReminders']
         else:
             reminders=event['reminders'].get('overrides',[])
-        for rems in reminder:
+        for rems in reminders:
             ttr=seconds2go-(int(rems['minutes'])*60)
             if ttr//croncycle==1:
                 y="Heads up! @here "+event['summary']+'  '+str(start.astimezone(timezone('US/Pacific')))+'\n\n'
