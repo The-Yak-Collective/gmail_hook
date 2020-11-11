@@ -1,12 +1,12 @@
 import pprint
-import icalendar as ical
-from icalevents.icalevents import events
-import base64
+
+
+
 import pickle
 import requests
 import os.path
 import os
-import email
+
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -17,7 +17,6 @@ from pytz import timezone
 import pytz
 import time
 from dotenv import load_dotenv
-import json
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly','https://www.googleapis.com/auth/calendar.readonly']
