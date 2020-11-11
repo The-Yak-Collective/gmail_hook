@@ -66,7 +66,7 @@ def main():
     for event in events:
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
         #print(start, datetime.utcnow(),datetime.now().astimezone())
-        seconds2go=(start-datetime.utcnow().astimezone()).total_seconds
+        seconds2go=(start-datetime.utcnow().astimezone()).total_seconds()
         print('starts in:', seconds2go, event['summary'], event['reminders'])
 
     print(events_result['defaultReminders'])
