@@ -13,7 +13,7 @@ import json
 remindseconds=[900,7200]
 croncycle=10800 #maybe will need to change this number
 
-load_dotenv('.env')
+load_dotenv('/home/yak/.env')
 
     
 def main():

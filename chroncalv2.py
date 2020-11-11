@@ -17,39 +17,33 @@ from pytz import timezone
 import pytz
 import time
 from dotenv import load_dotenv
+import json
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly','https://www.googleapis.com/auth/calendar.readonly']
 
+croncycle=10800 #maybe will need to change this number
 
 load_dotenv('/home/yak/.env')
 
-    
-    
+
 def main():
 
     creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
+
     if os.path.exists('/home/yak/token.pickle'):
         with open('/home/yak/token.pickle', 'rb') as token:
             creds = pickle.load(token)
-    # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file('yc-credentials.json', SCOPES)
             creds = flow.run_local_server(port=9000)
-        # Save the credentials for the next run
         with open('/home/yak/token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
-
     cal = build('calendar', 'v3', credentials=creds)
-
-    url = os.getenv('TEST_HOOK')
 
     now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
@@ -64,13 +58,41 @@ def main():
 
     for event in events:
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
-        #print(start, datetime.utcnow(),datetime.now().astimezone())
+         days, hours, minutes = int(seconds2go //(3600*24)), int(seconds2go // 3600), int(seconds2go // 60 % 60)
         seconds2go=(start-datetime.utcnow().astimezone()).total_seconds()
         print('starts in:', seconds2go, event['summary'], event['reminders'])
+        if event['reminders'].get('useDefault',False):
+            reminders=events_result['defaultReminders']
+        else:
+            reminders=event['reminders'].get('overrides',[])
+        for rems in reminder:
+            ttr=seconds2go-(int(rems['minutes'])*60)
+            if ttr//croncycle==1:
+                y="Heads up! @here "+event['summary']+'  '+str(start.astimezone(timezone('US/Pacific')))+'\n\n'
+                y=y+event['description']+'\n\n'
+                ts=''
+                if(days>0):
+                    ts=ts+str(days) + ' days and '
+                if(hours>0):
+                    ts=ts+str(hours) + ' hours and'
+                if(minutes>0):
+                    ts=ts+str(minutes) + ' minutes.'
+                if(days==0 and hours==0 and minutes<=2):
+                    ts=' **NOW**'
+                y=y+'starts in about: '+ ts
+                payload = {"content": y}
+                atm=(sl-rm) // 60
+                f=tempfile.NamedTemporaryFile(mode='w+',delete=False)
+                json.dump(payload,f)
+                f.flush()
+                os.system('''at now +{} minutes <<END
+exec >>~/robot/gmail_hook/alogfile 2>&1
+set -x
+set -v
+curl -d "@{}" -H "Content-Type: application/json" -X POST $TEST_HOOK 
+rm {}
+END'''.format(atm,f.name,f.name))
 
-    print(events_result['defaultReminders'])
-    #req = requests.post(url, data=payload)#, headers=headers)
-    #print(req,req.text)#,r.json())
 
 
 if __name__ == '__main__':
