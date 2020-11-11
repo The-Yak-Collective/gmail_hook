@@ -64,9 +64,9 @@ def main():
 
     for event in events:
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
-        print(start, datetime.utcnow(),datetime.now().astimezone())
+        #print(start, datetime.utcnow(),datetime.now().astimezone())
         
-        print('starts in:', datetime.utcnow()-start, event['summary'], event.reminders)
+        print('starts in:', datetime.utcnow().astimezone()-start, event['summary'], event.reminders)
     pp = pprint.PrettyPrinter(indent=1)
     pp.pprint(events_result)
     print(events_result.defaultReminders)
