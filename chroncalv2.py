@@ -66,8 +66,9 @@ def main():
         else:
             reminders=event['reminders'].get('overrides',[])
         for rems in reminders:
-            print('checking reminders')
+            print('checking reminders', rems)
             ttr=seconds2go-(int(rems['minutes'])*60)
+            print(ttr,ttr//croncycle)
             if ttr//croncycle==1:
                 thetz=timezone('US/Pacific')
                 print(thetz)
