@@ -57,14 +57,16 @@ def main():
                                         singleEvents=True,
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
-    print(events_result.defaultReminders)
+
     if not events:
         print('No upcoming events found.')
+
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         print('starts in:', datetime.now()-start, event['summary'], event.reminders)
     pp = pprint.PrettyPrinter(indent=1)
     pp.pprint(events_result)
+    print(events_result.defaultReminders)
     #req = requests.post(url, data=payload)#, headers=headers)
     #print(req,req.text)#,r.json())
 
