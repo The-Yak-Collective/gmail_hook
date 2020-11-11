@@ -59,7 +59,7 @@ def main():
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
     pp = pprint.PrettyPrinter(indent=1)
-    pp.pprint(events_result)
+    #pp.pprint(events_result)
     if not events:
         print('No upcoming events found.')
 
@@ -67,9 +67,9 @@ def main():
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
         #print(start, datetime.utcnow(),datetime.now().astimezone())
         
-        print('starts in:', datetime.utcnow().astimezone()-start, event['summary'], event.reminders)
+        print('starts in:', datetime.utcnow().astimezone()-start, event['summary'], event['reminders'])
 
-    print(events_result.defaultReminders)
+    print(events_result['defaultReminders'])
     #req = requests.post(url, data=payload)#, headers=headers)
     #print(req,req.text)#,r.json())
 
