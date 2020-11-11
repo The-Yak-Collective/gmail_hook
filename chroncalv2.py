@@ -46,7 +46,7 @@ def main():
     cal = build('calendar', 'v3', credentials=creds)
 
     now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
+    print('Getting the upcoming week')
     events_result = cal.events().list(calendarId='o995m43173bpslmhh49nmrp5i4@group.calendar.google.com', timeMin=now,timeMax=(datetime.utcnow()+timedelta(days=7)).isoformat()+ 'Z',
                                         singleEvents=True,
                                         orderBy='startTime').execute()
@@ -58,7 +58,7 @@ def main():
 
     for event in events:
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
-        seconds2go=(start-datetime.utcnow().astimezone()).total_seconds()
+        seconds2go=int((start-datetime.utcnow().astimezone()).total_seconds())
         days, hours, minutes = int(seconds2go //(3600*24)), int(seconds2go // 3600), int(seconds2go // 60 % 60)
         print('starts in:', seconds2go, event['summary'], event['reminders'])
         if event['reminders'].get('useDefault',False):
@@ -66,9 +66,13 @@ def main():
         else:
             reminders=event['reminders'].get('overrides',[])
         for rems in reminders:
+            print('checking reminders')
             ttr=seconds2go-(int(rems['minutes'])*60)
             if ttr//croncycle==1:
-                y="Heads up! @here "+event['summary']+'  '+str(start.astimezone(timezone('US/Pacific')))+'\n\n'
+                thetz=timezone('US/Pacific')
+                print(thetz)
+                thestring=str(start.astimezone(thetz))
+                y="Heads up! @here "+event['summary']+'  '+thestring+'\n\n'
                 y=y+event['description']+'\n\n'
                 ts=''
                 if(days>0):
@@ -80,10 +84,12 @@ def main():
                 if(days==0 and hours==0 and minutes<=2):
                     ts=' **NOW**'
                 y=y+'starts in about: '+ ts
+                print(y)
                 payload = {"content": y}
                 atm=(ttr) // 60
                 f=tempfile.NamedTemporaryFile(mode='w+',delete=False)
                 json.dump(payload,f)
+                print('dumped')
                 f.flush()
                 os.system('''at now +{} minutes <<END
 exec >>~/robot/gmail_hook/alogfile 2>&1
