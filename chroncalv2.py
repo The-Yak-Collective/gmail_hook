@@ -61,7 +61,7 @@ def main():
         print(event['summary'],start,datetime.utcnow())
         seconds2go=int((start-datetime.utcnow().astimezone()).total_seconds())
         days, hours, minutes = int(seconds2go //(3600*24)), int(seconds2go // 3600), int(seconds2go // 60 % 60)
-        print('starts in:', seconds2go, event['summary'], event['reminders'])
+        print('starts in:', seconds2go, event['summary'], event['reminders'], days, hours, minutes)
         if event['reminders'].get('useDefault',False):
             reminders=events_result['defaultReminders']
         else:
