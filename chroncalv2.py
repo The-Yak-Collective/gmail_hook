@@ -71,14 +71,14 @@ def main():
             if ttr//croncycle==1:
                 thetz=timezone('US/Pacific')
                 print(thetz)
-                thestring=str(start.astimezone(thetz))
+                thestring=start.astimezone(thetz).strftime('%a %b %d, %Y %I:%H %p %Z')
                 y="Heads up! @here "+event['summary']+'  '+thestring+'\n\n'
                 y=y+event['description']+'\n\n'
                 ts=''
                 if(days>0):
                     ts=ts+str(days) + ' days and '
                 if(hours>0):
-                    ts=ts+str(hours) + ' hours and'
+                    ts=ts+str(hours) + ' hours and '
                 if(minutes>0):
                     ts=ts+str(minutes) + ' minutes.'
                 if(days==0 and hours==0 and minutes<=2):
