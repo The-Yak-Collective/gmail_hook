@@ -10,7 +10,8 @@ import email
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-from email.utils import parsedate
+from dateutil.parser import parse
+
 from datetime import datetime, timedelta
 from pytz import timezone
 import pytz
@@ -62,8 +63,8 @@ def main():
         print('No upcoming events found.')
 
     for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(type(start), start)
+        start = parse(event['start'].get('dateTime', event['start'].get('date')))
+        
         print('starts in:', datetime.now()-start, event['summary'], event.reminders)
     pp = pprint.PrettyPrinter(indent=1)
     pp.pprint(events_result)
