@@ -71,7 +71,7 @@ def main():
             if ttr//croncycle==1:
                 thetz=timezone('US/Pacific')
                 print(thetz)
-                thestring=start.astimezone(thetz).strftime('%a %b %d, %Y %I:%H %p %Z')
+                thestring=start.astimezone(thetz).strftime('%a %b %d, %Y %I:%H %p (%Z)')
                 y="Heads up! @here "+event['summary']+'  '+thestring+'\n\n'
                 y=y+event['description']+'\n\n'
                 ts=''
