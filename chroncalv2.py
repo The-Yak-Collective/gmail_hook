@@ -63,6 +63,7 @@ def main():
 
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
+        print(type(start), start)
         print('starts in:', datetime.now()-start, event['summary'], event.reminders)
     pp = pprint.PrettyPrinter(indent=1)
     pp.pprint(events_result)
