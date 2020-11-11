@@ -81,7 +81,7 @@ def main():
                     ts=' **NOW**'
                 y=y+'starts in about: '+ ts
                 payload = {"content": y}
-                atm=(sl-rm) // 60
+                atm=(ttr) // 60
                 f=tempfile.NamedTemporaryFile(mode='w+',delete=False)
                 json.dump(payload,f)
                 f.flush()
