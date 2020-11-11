@@ -66,8 +66,8 @@ def main():
     for event in events:
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
         #print(start, datetime.utcnow(),datetime.now().astimezone())
-        
-        print('starts in:', datetime.utcnow().astimezone()-start, event['summary'], event['reminders'])
+        seconds2go=(start-datetime.utcnow().astimezone()).total_seconds
+        print('starts in:', seconds2go, event['summary'], event['reminders'])
 
     print(events_result['defaultReminders'])
     #req = requests.post(url, data=payload)#, headers=headers)
