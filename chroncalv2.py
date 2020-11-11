@@ -69,7 +69,7 @@ def main():
             print('checking reminders', rems)
             ttr=seconds2go-(int(rems['minutes'])*60)
             print(ttr,ttr//croncycle)
-            if ttr//croncycle==0:
+            if ttr//croncycle==1:
                 thetz=timezone('US/Pacific')
                 print(thetz)
                 thestring=start.astimezone(thetz).strftime('%a %b %d, %Y %I:%M %p (%Z)')
