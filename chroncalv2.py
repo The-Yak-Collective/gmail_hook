@@ -61,14 +61,16 @@ def main():
         print(event['summary'],start,datetime.utcnow())
         seconds2go=int((start-datetime.utcnow().astimezone()).total_seconds())
         days, hours, minutes = int(seconds2go //(3600*24)), int(seconds2go // 3600), int(seconds2go // 60 % 60)
-        print('starts in:', seconds2go, event['summary'], event['reminders'], days, hours, minutes)
+        print('starts in:', seconds2go, event['summary'], event['reminders'])
         if event['reminders'].get('useDefault',False):
             reminders=events_result['defaultReminders']
         else:
             reminders=event['reminders'].get('overrides',[])
         for rems in reminders:
             print('checking reminders', rems)
-            ttr=seconds2go-(int(rems['minutes'])*60)
+            rem_s=int(rems['minutes'])*60
+            ttr=seconds2go-rem_s
+            days, hours, minutes = int(rem_s //(3600*24)), int(rem_s // 3600), int(rem_s // 60 % 60)
             print(ttr,ttr//croncycle)
             if ttr//croncycle==1:
                 thetz=timezone('US/Pacific')
