@@ -1,3 +1,10 @@
+#the one run file that generates reminders
+#basically, it reads google calander (first making sure the token is up to date) to obtain events in next week. thsi si best way to deal with DST problems
+#it also identifies the reminders for each event (or the default ones)
+#each reminder (stored in a temporary file) is generated at the correct time (at command) and sent to discord (webhook on events channel)
+#this program is itself called by cron every 3 hours.
+# program needs 2 cycles to send reminders. so it will only send reminders if the event is at least 6 hours from now.
+
 import pprint
 
 import tempfile
@@ -70,7 +77,7 @@ def main():
             print('checking reminders', rems)
             rem_s=int(rems['minutes'])*60
             ttr=seconds2go-rem_s
-            days, hours, minutes = int(rem_s //(3600*24)), int(rem_s // 3600), int(rem_s // 60 % 60)
+            days, hours, minutes = int(rem_s //(3600*24)), int((rem_s // 3600)%24), int(rem_s // 60 % 60)
             print(ttr,ttr//croncycle)
             if ttr//croncycle==1:
                 thetz=timezone('US/Pacific')
