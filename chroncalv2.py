@@ -87,10 +87,14 @@ def main():
                 y=y+event['description']+'\n\n'
                 ts=''
                 if(days>0):
-                    ts=ts+str(days) + ' days and '
+                    ts=ts+str(days) + ' days '
                 if(hours>0):
-                    ts=ts+str(hours) + ' hours and '
+                    if(days>0):
+                        ts=ts+' and '
+                    ts=ts+str(hours) + ' hours '
                 if(minutes>0):
+                    if (hours>0 or days >0):
+                        ts=ts+ ' and '
                     ts=ts+str(minutes) + ' minutes.'
                 if(days==0 and hours==0 and minutes<=2):
                     ts=' **NOW**'
@@ -104,11 +108,13 @@ def main():
                 f.flush()
                 os.system('''at now +{} minutes <<END
 exec >>~/robot/gmail_hook/alogfile 2>&1
+date
+cat {}
 set -x
 set -v
 curl -d "@{}" -H "Content-Type: application/json" -X POST $TEST_HOOK 
 rm {}
-END'''.format(atm,f.name,f.name))
+END'''.format(atm,f.name,f.name,f.name))
 
 
 
