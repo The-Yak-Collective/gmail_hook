@@ -84,7 +84,7 @@ def main():
                 print(thetz)
                 thestring=start.astimezone(thetz).strftime('%a %b %d, %Y %I:%M %p (%Z)')
                 y="Heads up! @here "+event['summary']+'  '+thestring+'\n\n'
-                y=y+event['description']+'\n\n'
+                y=y+event.get('description','No details')+'\n\n'
                 ts=''
                 if(days>0):
                     ts=ts+str(days) + ' days '
