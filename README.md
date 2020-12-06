@@ -1,2 +1,3 @@
-# gmail_hook
-when run (due to gmail hook activating the server) looks for calendar reminder email and pushes it to discord channel
+# chroncalv2.py
+run by cron once every 3 hours and checks to see if any reminders need to be shown in next 3 hours.
+reminders are based on what is defined in yakcollective gmail
