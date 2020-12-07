@@ -6,7 +6,7 @@
 # program needs 2 cycles to send reminders. so it will only send reminders if the event is at least 6 hours from now.
 
 #TEST_HOOK is an .env variable which is a webhook for discord event channel
-
+#CALID is not (yet) an enviromental variable
 import pprint
 
 import tempfile
@@ -30,7 +30,7 @@ import json
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly','https://www.googleapis.com/auth/calendar.readonly']
-
+CALID='o995m43173bpslmhh49nmrp5i4@group.calendar.google.com'
 croncycle=10800 #maybe will need to change this number
 
 load_dotenv('/home/yak/.env')
@@ -57,7 +57,7 @@ def main():
 
     now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     print('Getting the upcoming week') #these all go to debugging file
-    events_result = cal.events().list(calendarId='o995m43173bpslmhh49nmrp5i4@group.calendar.google.com', timeMin=now,timeMax=(datetime.utcnow()+timedelta(days=7)).isoformat()+ 'Z',
+    events_result = cal.events().list(calendarId=CALID, timeMin=now,timeMax=(datetime.utcnow()+timedelta(days=7)).isoformat()+ 'Z',
                                         singleEvents=True,
                                         orderBy='startTime').execute()
 ##results include event items and some other stuff
