@@ -57,7 +57,7 @@ def main():
 
     now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     print('Getting the upcoming week') #these all go to debugging file
-    events_result = cal.events().list(calendarId=CALID, timeMin=now,timeMax=(datetime.utcnow()+timedelta(days=7)).isoformat()+ 'Z',
+    events_result = cal.events().list(calendarId=CALID, showDeleted=False, timeMin=now,timeMax=(datetime.utcnow()+timedelta(days=7)).isoformat()+ 'Z',
                                         singleEvents=True,
                                         orderBy='startTime').execute()
 ##results include event items and some other stuff
@@ -71,7 +71,7 @@ def main():
     for event in events:
 ##start with figuring for each event how many seconds to go
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
-        print(event['summary'],start,datetime.utcnow())
+        print(event['summary'],start,datetime.utcnow(), event['status'])
         seconds2go=int((start-datetime.utcnow().astimezone()).total_seconds())
         days, hours, minutes = int(seconds2go //(3600*24)), int(seconds2go // 3600), int(seconds2go // 60 % 60) #obselete, used for debugging
         print('starts in:', seconds2go, event['summary'], event['reminders'])
