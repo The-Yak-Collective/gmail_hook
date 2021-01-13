@@ -72,6 +72,8 @@ def main():
 ##start with figuring for each event how many seconds to go
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
         print(event['summary'],start,datetime.utcnow(), event['status'])
+        if (event['status']=="cancelled"):
+            continue
         seconds2go=int((start-datetime.utcnow().astimezone()).total_seconds())
         days, hours, minutes = int(seconds2go //(3600*24)), int(seconds2go // 3600), int(seconds2go // 60 % 60) #obselete, used for debugging
         print('starts in:', seconds2go, event['summary'], event['reminders'])
@@ -95,7 +97,7 @@ def main():
                 thetz=timezone('US/Pacific')
                 print(thetz)
                 thestring=start.astimezone(thetz).strftime('%a %b %d, %Y %I:%M %p (%Z)')
-                y="Heads up! @here "+event['summary']+'  '+thestring+'\n\n'
+                y="Heads up! @here "+event['summary'].replace("and Yak Collective","")+'  '+thestring+'\n\n'
 				
 ##some events have no description enetered, only title
                 y=y+event.get('description','No details')+'\n\n'
