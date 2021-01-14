@@ -72,7 +72,7 @@ def main():
 ##start with figuring for each event how many seconds to go
         start = parse(event['start'].get('dateTime', event['start'].get('date')))
         print(event['summary'],start,datetime.utcnow(), event['status'])
-        if (event['status']=="canceled"):
+        if (event['status']=="canceled" or event['summary'].startswith("Canceled:")):
             continue
         seconds2go=int((start-datetime.utcnow().astimezone()).total_seconds())
         days, hours, minutes = int(seconds2go //(3600*24)), int(seconds2go // 3600), int(seconds2go // 60 % 60) #obselete, used for debugging
