@@ -97,10 +97,23 @@ def main():
                 thetz=timezone('US/Pacific')
                 print(thetz)
                 thestring=start.astimezone(thetz).strftime('%a %b %d, %Y %I:%M %p (%Z)')
-                y="Heads up! @here "+event['summary'].replace("and Yak Collective","")+'  '+thestring+'\n\n'
+                if ("and Yak Collective" in event['summary']):
+                    y="Heads up! @here "+event['summary'].replace("and Yak Collective","")+'  '+thestring+'\n\n'
 				
 ##some events have no description enetered, only title
-                y=y+event.get('description','No details')+'\n\n'
+                    desc=event.get('description','No details')
+                    st1="Please share anything that will help prepare for our meeting."
+                    st2="Need to make changes to this event?"
+                    try:
+                        desc=desc[desc.find(st1)+len(st1):desc.find(st2)]
+                    except:
+                        pass
+                    y=y+desc+'\n\n'
+                else:
+                    y="Heads up! @here "+event['summary']+'  '+thestring+'\n\n'
+				
+##some events have no description enetered, only title
+                    y=y+event.get('description','No details')+'\n\n'
                 ts=''
 ##generate time string (ts)
                 if(days>0):
