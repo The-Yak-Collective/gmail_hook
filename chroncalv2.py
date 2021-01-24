@@ -102,7 +102,7 @@ def main():
 				
 ##some events have no description enetered, only title
                     desc=event.get('description','No details')
-                    st1="Please share anything that will help prepare for our meeting."
+                    st1="Please share anything that will help prepare for our meeting.:"
                     st2="Need to make changes to this event?"
                     try:
                         desc=desc[desc.find(st1)+len(st1):desc.find(st2)]
